@@ -128,268 +128,7 @@ const machines = {
   },
 };
 
-const scenes = [
-  {
-    type: "welcome",
-    title: "Meet the Function Machine",
-    prompt: "In and out.",
-    badge: "Start",
-    support: "One job every time.",
-    visualSetup: {
-      input: items.heart,
-      output: items.blueHeart,
-      machine: machines.makeBlue,
-    },
-    interaction: {
-      kind: "next_only",
-    },
-    correctAnswer: null,
-    successFeedback: "Watch it go.",
-  },
-  {
-    type: "teach",
-    title: "A Function",
-    prompt: "Watch this.",
-    badge: "Learn",
-    support: "Heart in. Blue heart out.",
-    visualSetup: {
-      input: items.heart,
-      output: items.blueHeart,
-      machine: machines.makeBlue,
-    },
-    interaction: {
-      kind: "next_only",
-    },
-    correctAnswer: null,
-    successFeedback: "Same job each time.",
-  },
-  {
-    type: "single_function_choice",
-    title: "Your Turn",
-    prompt: "What comes out?",
-    badge: "Try",
-    support: "Tap one picture.",
-    visualSetup: {
-      machine: machines.addHat,
-      input: items.cat,
-    },
-    interaction: {
-      kind: "single_function_choice",
-      choices: [items.hatCat, items.blueHeart, items.stripeCircle],
-    },
-    correctAnswer: "hatCat",
-    successFeedback: "Yes. Hat cat.",
-    retryFeedback: "This machine adds a hat.",
-  },
-  {
-    type: "teach_chain",
-    title: "Make a Chain",
-    prompt: "One step. Then one more.",
-    badge: "Chain",
-    support: "The first answer goes into the next machine.",
-    visualSetup: {
-      input: items.apple,
-      machines: [machines.growBig, machines.makeBlue],
-      middle: items.bigApple,
-      output: items.blueBigApple,
-    },
-    interaction: {
-      kind: "next_only",
-    },
-    correctAnswer: null,
-    successFeedback: "Left to right.",
-  },
-  {
-    type: "chain_function_choice",
-    title: "Two Machines!",
-    prompt: "What comes out now?",
-    badge: "Play",
-    support: "Go left to right.",
-    visualSetup: {
-      input: items.dotCircle,
-      machines: [machines.addStripes, machines.makeBlue],
-    },
-    interaction: {
-      kind: "chain_function_choice",
-      choices: [items.stripeCircle, items.blueHeart, items.blueStripeCircle],
-    },
-    correctAnswer: "blueStripeCircle",
-    successFeedback: "Yes. Stripes, then blue.",
-    retryFeedback: "First stripes. Then blue.",
-  },
-  {
-    type: "number_example",
-    title: "Try Numbers",
-    prompt: "Functions work on numbers too.",
-    badge: "7",
-    support: "2 goes in. Add 1. 3 comes out.",
-    visualSetup: {
-      input: 2,
-      output: 3,
-      machine: {
-        icon: "+1",
-        name: "Add 1",
-        label: "One more",
-      },
-    },
-    interaction: {
-      kind: "restart",
-    },
-    correctAnswer: null,
-    successFeedback: "Now you try.",
-  },
-  {
-    type: "number_choice",
-    title: "Your Number Turn",
-    prompt: "What comes out?",
-    badge: "8",
-    support: "3 goes in. Add 1.",
-    visualSetup: {
-      input: 3,
-      machine: {
-        icon: "+1",
-        name: "Add 1",
-        label: "One more",
-      },
-    },
-    interaction: {
-      kind: "number_choice",
-      choices: [2, 4, 5],
-    },
-    correctAnswer: 4,
-    successFeedback: "Yes. 4 comes out.",
-    retryFeedback: "Add 1 to 3. That makes 4.",
-  },
-  {
-    type: "number_chain_example",
-    title: "Chain Numbers",
-    prompt: "First this. Then this.",
-    badge: "9",
-    support: "2 goes in. Add 1. Then add 1 again.",
-    visualSetup: {
-      input: 2,
-      middle: 3,
-      output: 4,
-      machines: [
-        {
-          icon: "+1",
-          name: "Add 1",
-          label: "One more",
-        },
-        {
-          icon: "+1",
-          name: "Add 1",
-          label: "One more",
-        },
-      ],
-    },
-    interaction: {
-      kind: "restart",
-    },
-    correctAnswer: null,
-    successFeedback: "2, 3, 4. That is a chain.",
-  },
-  {
-    type: "number_chain_choice",
-    title: "Number Chain Quiz",
-    prompt: "What comes out now?",
-    badge: "10",
-    support: "2 goes in. Add 1. Then triple.",
-    visualSetup: {
-      input: 2,
-      machines: [
-        {
-          icon: "+1",
-          name: "Add 1",
-          label: "One more",
-        },
-        {
-          icon: "×3",
-          name: "Triple",
-          label: "Three times",
-        },
-      ],
-    },
-    interaction: {
-      kind: "number_chain_choice",
-      choices: [6, 8, 9],
-    },
-    correctAnswer: 9,
-    successFeedback: "Yes. 9 comes out.",
-    retryFeedback: "2 becomes 3. Then 3 becomes 9.",
-  },
-  {
-    type: "number_chain_choice",
-    title: "Number Chain Quiz",
-    prompt: "What comes out now?",
-    badge: "11",
-    support: "10 goes in. Take away 2. Then double.",
-    visualSetup: {
-      input: 10,
-      machines: [
-        {
-          icon: "-2",
-          name: "Take Away 2",
-          label: "Two less",
-        },
-        {
-          icon: "×2",
-          name: "Double",
-          label: "Two times",
-        },
-      ],
-    },
-    interaction: {
-      kind: "number_chain_choice",
-      choices: [14, 16, 18],
-    },
-    correctAnswer: 16,
-    successFeedback: "Yes. 16 comes out.",
-    retryFeedback: "10 becomes 8. Then 8 becomes 16.",
-  },
-  {
-    type: "number_chain_choice",
-    title: "Number Chain Quiz",
-    prompt: "What comes out now?",
-    badge: "12",
-    support: "8 goes in. Half it. Then add 3.",
-    visualSetup: {
-      input: 8,
-      machines: [
-        {
-          icon: "1/2",
-          name: "Half",
-          label: "Split in two",
-        },
-        {
-          icon: "+3",
-          name: "Add 3",
-          label: "Three more",
-        },
-      ],
-    },
-    interaction: {
-      kind: "number_chain_choice",
-      choices: [6, 7, 8],
-    },
-    correctAnswer: 7,
-    successFeedback: "Yes. 7 comes out.",
-    retryFeedback: "8 becomes 4. Then 4 becomes 7.",
-  },
-  {
-    type: "celebrate",
-    title: "You Did It!",
-    prompt: "You learned pictures and numbers.",
-    badge: "Yay",
-    support: "One job. Then another.",
-    visualSetup: null,
-    interaction: {
-      kind: "restart",
-    },
-    correctAnswer: null,
-    successFeedback: "You are ready to play again.",
-  },
-];
+let scenes = createScenes();
 
 const sceneBody = document.getElementById("sceneBody");
 const progressText = document.getElementById("progressText");
@@ -403,6 +142,413 @@ document.addEventListener("click", handleBubbleClick);
 document.addEventListener("keydown", handleBubbleKeydown);
 
 renderScene();
+
+function createScenes() {
+  return [
+    {
+      type: "welcome",
+      title: "Meet the Function Machine",
+      prompt: "In and out.",
+      badge: "Start",
+      support: "One job every time.",
+      visualSetup: {
+        input: items.heart,
+        output: items.blueHeart,
+        machine: machines.makeBlue,
+      },
+      interaction: {
+        kind: "next_only",
+      },
+      correctAnswer: null,
+      successFeedback: "Watch it go.",
+    },
+    {
+      type: "teach",
+      title: "A Function",
+      prompt: "Watch this.",
+      badge: "Learn",
+      support: "Heart in. Blue heart out.",
+      visualSetup: {
+        input: items.heart,
+        output: items.blueHeart,
+        machine: machines.makeBlue,
+      },
+      interaction: {
+        kind: "next_only",
+      },
+      correctAnswer: null,
+      successFeedback: "Same job each time.",
+    },
+    {
+      type: "single_function_choice",
+      title: "Your Turn",
+      prompt: "What comes out?",
+      badge: "Try",
+      support: "Tap one picture.",
+      visualSetup: {
+        machine: machines.addHat,
+        input: items.cat,
+      },
+      interaction: {
+        kind: "single_function_choice",
+        choices: [items.hatCat, items.blueHeart, items.stripeCircle],
+      },
+      correctAnswer: "hatCat",
+      successFeedback: "Yes. Hat cat.",
+      retryFeedback: "This machine adds a hat.",
+    },
+    {
+      type: "teach_chain",
+      title: "Make a Chain",
+      prompt: "One step. Then one more.",
+      badge: "Chain",
+      support: "The first answer goes into the next machine.",
+      visualSetup: {
+        input: items.apple,
+        machines: [machines.growBig, machines.makeBlue],
+        middle: items.bigApple,
+        output: items.blueBigApple,
+      },
+      interaction: {
+        kind: "next_only",
+      },
+      correctAnswer: null,
+      successFeedback: "Left to right.",
+    },
+    {
+      type: "chain_function_choice",
+      title: "Two Machines!",
+      prompt: "What comes out now?",
+      badge: "Play",
+      support: "Go left to right.",
+      visualSetup: {
+        input: items.dotCircle,
+        machines: [machines.addStripes, machines.makeBlue],
+      },
+      interaction: {
+        kind: "chain_function_choice",
+        choices: [items.stripeCircle, items.blueHeart, items.blueStripeCircle],
+      },
+      correctAnswer: "blueStripeCircle",
+      successFeedback: "Yes. Stripes, then blue.",
+      retryFeedback: "First stripes. Then blue.",
+    },
+    ...createNumberScenes(),
+    {
+      type: "celebrate",
+      title: "You Did It!",
+      prompt: "You learned pictures and numbers.",
+      badge: "Yay",
+      support: "One job. Then another.",
+      visualSetup: null,
+      interaction: {
+        kind: "restart",
+      },
+      correctAnswer: null,
+      successFeedback: "You are ready to play again.",
+    },
+  ];
+}
+
+function createNumberScenes() {
+  const example = buildOneStepExample();
+  const oneStepQuiz = buildOneStepQuiz();
+  const chainExample = buildNumberChainExample();
+  const chainQuizA = buildChainQuizPlusThenTriple();
+  const chainQuizB = buildChainQuizMinusThenDouble();
+  const chainQuizC = buildChainQuizHalfThenAdd();
+
+  return [example, oneStepQuiz, chainExample, chainQuizA, chainQuizB, chainQuizC];
+}
+
+function buildOneStepExample() {
+  const machine = pickRandom([makeAddMachine(1), makeAddMachine(2), makeDoubleMachine()]);
+  const input = randomChoiceForMachine(machine);
+  const output = applyMachine(machine, input);
+
+  return {
+    type: "number_example",
+    title: "Try Numbers",
+    prompt: "Functions work on numbers too.",
+    badge: "7",
+    support: `${input} goes in. ${machine.name}. ${output} comes out.`,
+    visualSetup: {
+      input,
+      output,
+      machine,
+    },
+    interaction: {
+      kind: "next_only",
+    },
+    correctAnswer: null,
+    successFeedback: "Now you try.",
+  };
+}
+
+function buildOneStepQuiz() {
+  const machine = pickRandom([makeAddMachine(1), makeAddMachine(2), makeSubtractMachine(1), makeDoubleMachine()]);
+  const input = randomChoiceForMachine(machine);
+  const answer = applyMachine(machine, input);
+
+  return {
+    type: "number_choice",
+    title: "Your Number Turn",
+    prompt: "What comes out?",
+    badge: "8",
+    support: `${input} goes in. ${machine.name}.`,
+    visualSetup: {
+      input,
+      machine,
+    },
+    interaction: {
+      kind: "number_choice",
+      choices: buildNumberChoices(answer),
+    },
+    correctAnswer: answer,
+    successFeedback: `Yes. ${answer} comes out.`,
+    retryFeedback: `${machine.name} changes ${input} to ${answer}.`,
+  };
+}
+
+function buildNumberChainExample() {
+  const firstMachine = makeAddMachine(1);
+  const secondMachine = pickRandom([makeAddMachine(1), makeAddMachine(2), makeDoubleMachine()]);
+  const input = randomInt(1, secondMachine.icon === "×2" ? 4 : 6);
+  const middle = applyMachine(firstMachine, input);
+  const output = applyMachine(secondMachine, middle);
+
+  return {
+    type: "number_chain_example",
+    title: "Chain Numbers",
+    prompt: "First this. Then this.",
+    badge: "9",
+    support: `${input} goes in. ${firstMachine.name}. Then ${secondMachine.name.toLowerCase()}.`,
+    visualSetup: {
+      input,
+      middle,
+      output,
+      machines: [firstMachine, secondMachine],
+    },
+    interaction: {
+      kind: "next_only",
+    },
+    correctAnswer: null,
+    successFeedback: `${input}, ${middle}, ${output}. That is a chain.`,
+  };
+}
+
+function buildChainQuizPlusThenTriple() {
+  const input = randomInt(1, 3);
+  const firstMachine = makeAddMachine(randomInt(1, 2));
+  const secondMachine = makeTripleMachine();
+  const middle = applyMachine(firstMachine, input);
+  const answer = applyMachine(secondMachine, middle);
+
+  return {
+    type: "number_chain_choice",
+    title: "Number Chain Quiz",
+    prompt: "What comes out now?",
+    badge: "10",
+    support: `${input} goes in. ${firstMachine.name}. Then ${secondMachine.name.toLowerCase()}.`,
+    visualSetup: {
+      input,
+      machines: [firstMachine, secondMachine],
+    },
+    interaction: {
+      kind: "number_chain_choice",
+      choices: buildNumberChoices(answer),
+    },
+    correctAnswer: answer,
+    successFeedback: `Yes. ${answer} comes out.`,
+    retryFeedback: `${input} becomes ${middle}. Then ${middle} becomes ${answer}.`,
+  };
+}
+
+function buildChainQuizMinusThenDouble() {
+  const input = randomInt(6, 9);
+  const firstMachine = makeSubtractMachine(randomInt(1, 2));
+  const secondMachine = makeDoubleMachine();
+  const middle = applyMachine(firstMachine, input);
+  const answer = applyMachine(secondMachine, middle);
+
+  return {
+    type: "number_chain_choice",
+    title: "Number Chain Quiz",
+    prompt: "What comes out now?",
+    badge: "11",
+    support: `${input} goes in. ${firstMachine.name}. Then ${secondMachine.name.toLowerCase()}.`,
+    visualSetup: {
+      input,
+      machines: [firstMachine, secondMachine],
+    },
+    interaction: {
+      kind: "number_chain_choice",
+      choices: buildNumberChoices(answer),
+    },
+    correctAnswer: answer,
+    successFeedback: `Yes. ${answer} comes out.`,
+    retryFeedback: `${input} becomes ${middle}. Then ${middle} becomes ${answer}.`,
+  };
+}
+
+function buildChainQuizHalfThenAdd() {
+  const input = pickRandom([4, 6, 8, 10]);
+  const firstMachine = makeHalfMachine();
+  const secondMachine = makeAddMachine(randomInt(1, 3));
+  const middle = applyMachine(firstMachine, input);
+  const answer = applyMachine(secondMachine, middle);
+
+  return {
+    type: "number_chain_choice",
+    title: "Number Chain Quiz",
+    prompt: "What comes out now?",
+    badge: "12",
+    support: `${input} goes in. ${firstMachine.name}. Then ${secondMachine.name.toLowerCase()}.`,
+    visualSetup: {
+      input,
+      machines: [firstMachine, secondMachine],
+    },
+    interaction: {
+      kind: "number_chain_choice",
+      choices: buildNumberChoices(answer),
+    },
+    correctAnswer: answer,
+    successFeedback: `Yes. ${answer} comes out.`,
+    retryFeedback: `${input} becomes ${middle}. Then ${middle} becomes ${answer}.`,
+  };
+}
+
+function randomChoiceForMachine(machine) {
+  if (machine.kind === "add") {
+    return randomInt(1, 7);
+  }
+
+  if (machine.kind === "subtract") {
+    return randomInt(machine.amount + 2, 10);
+  }
+
+  if (machine.kind === "double") {
+    return randomInt(1, 5);
+  }
+
+  if (machine.kind === "half") {
+    return pickRandom([2, 4, 6, 8, 10]);
+  }
+
+  return randomInt(1, 3);
+}
+
+function applyMachine(machine, value) {
+  if (machine.kind === "add") {
+    return value + machine.amount;
+  }
+
+  if (machine.kind === "subtract") {
+    return value - machine.amount;
+  }
+
+  if (machine.kind === "double") {
+    return value * 2;
+  }
+
+  if (machine.kind === "triple") {
+    return value * 3;
+  }
+
+  if (machine.kind === "half") {
+    return value / 2;
+  }
+
+  return value;
+}
+
+function buildNumberChoices(answer) {
+  const pool = [answer];
+  let offset = 1;
+
+  while (pool.length < 3) {
+    const lower = answer - offset;
+    const upper = answer + offset;
+
+    if (lower >= 1 && !pool.includes(lower)) {
+      pool.push(lower);
+    }
+
+    if (pool.length < 3 && upper <= 18 && !pool.includes(upper)) {
+      pool.push(upper);
+    }
+
+    offset += 1;
+  }
+
+  return shuffleArray(pool);
+}
+
+function makeAddMachine(amount) {
+  return {
+    kind: "add",
+    amount,
+    icon: `+${amount}`,
+    name: `Add ${amount}`,
+    label: `${amount} more`,
+  };
+}
+
+function makeSubtractMachine(amount) {
+  return {
+    kind: "subtract",
+    amount,
+    icon: `-${amount}`,
+    name: `Take Away ${amount}`,
+    label: `${amount} less`,
+  };
+}
+
+function makeDoubleMachine() {
+  return {
+    kind: "double",
+    icon: "×2",
+    name: "Double",
+    label: "Two times",
+  };
+}
+
+function makeTripleMachine() {
+  return {
+    kind: "triple",
+    icon: "×3",
+    name: "Triple",
+    label: "Three times",
+  };
+}
+
+function makeHalfMachine() {
+  return {
+    kind: "half",
+    icon: "1/2",
+    name: "Half",
+    label: "Split in two",
+  };
+}
+
+function randomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function pickRandom(values) {
+  return values[randomInt(0, values.length - 1)];
+}
+
+function shuffleArray(values) {
+  const copy = [...values];
+
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const swapIndex = randomInt(0, index);
+    [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
+  }
+
+  return copy;
+}
 
 function renderScene() {
   const scene = scenes[currentSceneIndex];
@@ -1143,6 +1289,7 @@ function renderControls(scene, state) {
     nextButton.addEventListener("click", () => {
       currentSceneIndex = 0;
       sceneState.clear();
+      scenes = createScenes();
       renderScene();
     });
   } else {
