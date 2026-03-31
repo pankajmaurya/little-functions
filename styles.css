@@ -140,10 +140,67 @@ h1 {
   margin-bottom: 22px;
 }
 
+.scene-header-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.scene-header-art {
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  border: 4px solid var(--line);
+  border-radius: 28px;
+  font-size: 2.6rem;
+  background: #fff;
+  box-shadow: 0 8px 0 rgba(36, 50, 74, 0.08);
+  animation: floaty 2.6s ease-in-out infinite;
+}
+
+.scene-header-art-teach {
+  background: linear-gradient(180deg, #eff8ff, #d9f0ff);
+}
+
+.scene-header-art-quiz {
+  background: linear-gradient(180deg, #fff2ea, #ffe0ce);
+}
+
+.scene-header-art-finish {
+  background: linear-gradient(180deg, #f1ffe9, #ddf7ca);
+}
+
 .scene-title {
   margin: 0 0 6px;
   font-family: "Georgia", "Palatino Linotype", serif;
   font-size: clamp(1.8rem, 4vw, 2.8rem);
+}
+
+.scene-kind {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 6px 12px;
+  border: 3px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: #fff;
+}
+
+.scene-kind-teach {
+  background: #dff2ff;
+}
+
+.scene-kind-quiz {
+  background: #ffe7d8;
+}
+
+.scene-kind-finish {
+  background: #e5f8dc;
 }
 
 .scene-prompt {
@@ -189,6 +246,32 @@ h1 {
   font-size: 1.08rem;
   line-height: 1.4;
   animation: rise-in 420ms ease both;
+}
+
+.scene-teach .support-box {
+  background: linear-gradient(180deg, #f6fcff, #e8f5ff);
+}
+
+.scene-quiz .support-box,
+.scene-quiz .feedback-box {
+  background: linear-gradient(180deg, #fff9f4, #ffeede);
+}
+
+.scene-finish .support-box,
+.scene-finish .feedback-box {
+  background: linear-gradient(180deg, #f7fff2, #e7f7dd);
+}
+
+.scene-teach .badge {
+  background: #e4f4ff;
+}
+
+.scene-quiz .badge {
+  background: #fff0e4;
+}
+
+.scene-finish .badge {
+  background: #ebf9df;
 }
 
 .hero-machine {
@@ -355,6 +438,18 @@ h1 {
   justify-content: center;
 }
 
+.number-sentence {
+  align-items: stretch;
+}
+
+.number-chain-result {
+  display: grid;
+  grid-template-columns: minmax(150px, 200px) auto minmax(120px, 170px) auto minmax(120px, 170px) auto minmax(150px, 200px);
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+}
+
 .arrow {
   font-size: 2rem;
   font-weight: 800;
@@ -491,6 +586,36 @@ h1 {
   display: block;
   font-weight: 900;
   font-size: 1.1rem;
+}
+
+.number-card {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 10px;
+}
+
+.number-dots {
+  display: grid;
+  grid-template-columns: repeat(3, 22px);
+  gap: 10px;
+  justify-content: center;
+  min-height: 54px;
+  margin-top: 8px;
+}
+
+.number-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #ff8f73, #ff6d54);
+  border: 3px solid var(--line);
+}
+
+.number-value {
+  font-size: 3rem;
+  font-weight: 900;
+  line-height: 1;
 }
 
 .item-tags {
@@ -870,6 +995,7 @@ h1 {
   .stage.welcome,
   .visual-grid,
   .visual-sentence,
+  .number-chain-result,
   .choice-grid,
   .answer-grid,
   .chain-walkthrough {
@@ -882,6 +1008,17 @@ h1 {
     align-items: start;
   }
 
+  .scene-header-main {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .scene-header-art {
+    width: 70px;
+    height: 70px;
+    font-size: 2.1rem;
+  }
+
   .machine-row,
   .mini-machine-row {
     justify-content: start;
@@ -891,11 +1028,16 @@ h1 {
     justify-items: stretch;
   }
 
+  .number-chain-result {
+    justify-items: stretch;
+  }
+
   .chain-step {
     grid-template-columns: 1fr;
   }
 
-  .visual-sentence .arrow {
+  .visual-sentence .arrow,
+  .number-chain-result .arrow {
     justify-self: center;
     transform: rotate(90deg);
     animation: none;

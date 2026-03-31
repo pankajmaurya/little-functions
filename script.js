@@ -218,10 +218,111 @@ const scenes = [
     retryFeedback: "First stripes. Then blue.",
   },
   {
+    type: "number_example",
+    title: "Try Numbers",
+    prompt: "Functions work on numbers too.",
+    badge: "7",
+    support: "2 goes in. Add 1. 3 comes out.",
+    visualSetup: {
+      input: 2,
+      output: 3,
+      machine: {
+        icon: "+1",
+        name: "Add 1",
+        label: "One more",
+      },
+    },
+    interaction: {
+      kind: "restart",
+    },
+    correctAnswer: null,
+    successFeedback: "Now you try.",
+  },
+  {
+    type: "number_choice",
+    title: "Your Number Turn",
+    prompt: "What comes out?",
+    badge: "8",
+    support: "3 goes in. Add 1.",
+    visualSetup: {
+      input: 3,
+      machine: {
+        icon: "+1",
+        name: "Add 1",
+        label: "One more",
+      },
+    },
+    interaction: {
+      kind: "number_choice",
+      choices: [2, 4, 5],
+    },
+    correctAnswer: 4,
+    successFeedback: "Yes. 4 comes out.",
+    retryFeedback: "Add 1 to 3. That makes 4.",
+  },
+  {
+    type: "number_chain_example",
+    title: "Chain Numbers",
+    prompt: "First this. Then this.",
+    badge: "9",
+    support: "2 goes in. Add 1. Then add 1 again.",
+    visualSetup: {
+      input: 2,
+      middle: 3,
+      output: 4,
+      machines: [
+        {
+          icon: "+1",
+          name: "Add 1",
+          label: "One more",
+        },
+        {
+          icon: "+1",
+          name: "Add 1",
+          label: "One more",
+        },
+      ],
+    },
+    interaction: {
+      kind: "restart",
+    },
+    correctAnswer: null,
+    successFeedback: "2, 3, 4. That is a chain.",
+  },
+  {
+    type: "number_chain_choice",
+    title: "Number Chain Quiz",
+    prompt: "What comes out now?",
+    badge: "10",
+    support: "2 goes in. Add 1. Then add 1 again.",
+    visualSetup: {
+      input: 2,
+      machines: [
+        {
+          icon: "+1",
+          name: "Add 1",
+          label: "One more",
+        },
+        {
+          icon: "+1",
+          name: "Add 1",
+          label: "One more",
+        },
+      ],
+    },
+    interaction: {
+      kind: "number_chain_choice",
+      choices: [3, 4, 5],
+    },
+    correctAnswer: 4,
+    successFeedback: "Yes. 4 comes out.",
+    retryFeedback: "2 becomes 3. Then 3 becomes 4.",
+  },
+  {
     type: "celebrate",
     title: "You Did It!",
-    prompt: "You learned 2 ideas.",
-    badge: "Finish",
+    prompt: "You learned pictures and numbers.",
+    badge: "Yay",
     support: "One job. Then another.",
     visualSetup: null,
     interaction: {
@@ -247,8 +348,10 @@ function renderScene() {
   const state = sceneState.get(currentSceneIndex) || {};
   const sceneElement = document.createElement("article");
   sceneElement.className = "scene";
+  const sceneMode = getSceneMode(scene.type);
+  sceneElement.classList.add(`scene-${sceneMode.kind}`);
 
-  sceneElement.appendChild(renderSceneHeader(scene));
+  sceneElement.appendChild(renderSceneHeader(scene, sceneMode));
 
   if (scene.type === "welcome") {
     sceneElement.appendChild(renderWelcomeScene(scene));
@@ -262,6 +365,14 @@ function renderScene() {
     sceneElement.appendChild(renderChainChoiceScene(scene, state));
   } else if (scene.type === "celebrate") {
     sceneElement.appendChild(renderCelebrateScene(scene));
+  } else if (scene.type === "number_example") {
+    sceneElement.appendChild(renderNumberExampleScene(scene));
+  } else if (scene.type === "number_choice") {
+    sceneElement.appendChild(renderNumberChoiceScene(scene, state));
+  } else if (scene.type === "number_chain_example") {
+    sceneElement.appendChild(renderNumberChainExampleScene(scene));
+  } else if (scene.type === "number_chain_choice") {
+    sceneElement.appendChild(renderNumberChainChoiceScene(scene, state));
   }
 
   sceneElement.appendChild(renderControls(scene, state));
@@ -269,13 +380,17 @@ function renderScene() {
   renderProgress();
 }
 
-function renderSceneHeader(scene) {
+function renderSceneHeader(scene, sceneMode) {
   const header = document.createElement("header");
   header.className = "scene-header";
   header.innerHTML = `
-    <div>
-      <h2 class="scene-title">${scene.title}</h2>
-      <p class="scene-prompt">${scene.prompt}</p>
+    <div class="scene-header-main">
+      <div class="scene-header-art scene-header-art-${sceneMode.kind}" aria-hidden="true">${sceneMode.icon}</div>
+      <div>
+        <div class="scene-kind scene-kind-${sceneMode.kind}">${sceneMode.label}</div>
+        <h2 class="scene-title">${scene.title}</h2>
+        <p class="scene-prompt">${scene.prompt}</p>
+      </div>
     </div>
     <div class="badge">${scene.badge}</div>
   `;
@@ -401,6 +516,121 @@ function renderCelebrateScene(scene) {
   return wrapper;
 }
 
+function renderNumberExampleScene(scene) {
+  const wrapper = document.createElement("section");
+  wrapper.className = "stage";
+
+  const support = document.createElement("div");
+  support.className = "support-box";
+  support.textContent = scene.support;
+  wrapper.appendChild(support);
+
+  const row = document.createElement("div");
+  row.className = "visual-sentence number-sentence";
+  row.appendChild(renderNumberCard("Input", scene.visualSetup.input));
+  row.appendChild(renderArrow());
+  row.appendChild(renderMachineCard(scene.visualSetup.machine));
+  row.appendChild(renderArrow());
+  row.appendChild(renderNumberCard("Output", scene.visualSetup.output));
+  wrapper.appendChild(row);
+
+  const note = document.createElement("div");
+  note.className = "feedback-box";
+  note.innerHTML = `
+    <strong>Numbers can use machines too.</strong>
+    <span>${scene.successFeedback}</span>
+  `;
+  wrapper.appendChild(note);
+
+  return wrapper;
+}
+
+function renderNumberChoiceScene(scene, state) {
+  const wrapper = document.createElement("section");
+  wrapper.className = "stage";
+
+  const support = document.createElement("div");
+  support.className = "support-box";
+  support.textContent = scene.support;
+  wrapper.appendChild(support);
+
+  const row = document.createElement("div");
+  row.className = "visual-sentence number-sentence";
+  row.appendChild(renderNumberCard("Input", scene.visualSetup.input));
+  row.appendChild(renderArrow());
+  row.appendChild(renderMachineCard(scene.visualSetup.machine));
+  row.appendChild(renderArrow());
+  row.appendChild(renderNumberResultCard(state.revealed ? state.selected : null, state));
+  wrapper.appendChild(row);
+
+  wrapper.appendChild(renderNumberChoices(scene, state));
+  wrapper.appendChild(renderFeedback(scene, state));
+  return wrapper;
+}
+
+function renderNumberChainExampleScene(scene) {
+  const wrapper = document.createElement("section");
+  wrapper.className = "stage";
+
+  const support = document.createElement("div");
+  support.className = "support-box";
+  support.textContent = scene.support;
+  wrapper.appendChild(support);
+
+  wrapper.appendChild(
+    renderNumberChainWalkthrough(
+      scene.visualSetup.input,
+      scene.visualSetup.machines,
+      scene.visualSetup.middle,
+      scene.visualSetup.output,
+    ),
+  );
+
+  const note = document.createElement("div");
+  note.className = "feedback-box";
+  note.innerHTML = `
+    <strong>Numbers can chain too.</strong>
+    <span>${scene.successFeedback}</span>
+  `;
+  wrapper.appendChild(note);
+
+  return wrapper;
+}
+
+function renderNumberChainChoiceScene(scene, state) {
+  const wrapper = document.createElement("section");
+  wrapper.className = "stage";
+
+  const support = document.createElement("div");
+  support.className = "support-box";
+  support.textContent = scene.support;
+  wrapper.appendChild(support);
+
+  const row = document.createElement("div");
+  row.className = "mini-machine-row";
+  row.appendChild(renderNumberCard("Start", scene.visualSetup.input));
+  row.appendChild(renderArrow());
+  row.appendChild(renderMachineCard(scene.visualSetup.machines[0]));
+  row.appendChild(renderArrow());
+  row.appendChild(renderMachineCard(scene.visualSetup.machines[1]));
+  wrapper.appendChild(row);
+
+  const resultRow = document.createElement("div");
+  resultRow.className = "number-chain-result";
+  resultRow.appendChild(renderNumberCard("Input", scene.visualSetup.input));
+  resultRow.appendChild(renderArrow());
+  resultRow.appendChild(renderMachineChip("1", scene.visualSetup.machines[0]));
+  resultRow.appendChild(renderArrow());
+  resultRow.appendChild(renderMachineChip("2", scene.visualSetup.machines[1]));
+  resultRow.appendChild(renderArrow());
+  resultRow.appendChild(renderNumberResultCard(state.revealed ? state.selected : null, state));
+  wrapper.appendChild(resultRow);
+
+  wrapper.appendChild(renderNumberChoices(scene, state));
+  wrapper.appendChild(renderFeedback(scene, state));
+  return wrapper;
+}
+
 function renderHeroMachine(visual) {
   const machine = document.createElement("div");
   machine.className = "hero-machine support-box";
@@ -450,6 +680,104 @@ function renderMachineCard(machine) {
     <div class="machine-label">${machine.label}</div>
   `;
   return card;
+}
+
+function renderNumberCard(title, count) {
+  const card = document.createElement("div");
+  card.className = "item-card number-card";
+  card.innerHTML = `
+    <div class="badge">${title}</div>
+    <div class="number-dots" aria-hidden="true">${renderDots(count)}</div>
+    <span class="number-value">${count}</span>
+  `;
+  return card;
+}
+
+function renderDots(count) {
+  return Array.from({ length: count }, () => '<span class="number-dot"></span>').join("");
+}
+
+function renderNumberChainWalkthrough(input, machineList, middle, output) {
+  const grid = document.createElement("div");
+  grid.className = "chain-walkthrough";
+
+  const stepOne = document.createElement("div");
+  stepOne.className = "chain-step";
+  stepOne.appendChild(renderNumberCard("Start", input));
+  stepOne.appendChild(renderMachineChip("1", machineList[0]));
+  stepOne.appendChild(renderNumberCard("Now", middle));
+
+  const stepTwo = document.createElement("div");
+  stepTwo.className = "chain-step";
+  stepTwo.appendChild(renderNumberCard("Use This", middle));
+  stepTwo.appendChild(renderMachineChip("2", machineList[1]));
+  stepTwo.appendChild(renderNumberCard("Finish", output));
+
+  grid.appendChild(stepOne);
+  grid.appendChild(stepTwo);
+  return grid;
+}
+
+function renderNumberResultCard(value, state) {
+  const card = document.createElement("div");
+  card.className = "answer-card result-card number-card";
+
+  if (value === null) {
+    card.classList.add("is-empty");
+    card.innerHTML = `
+      <div class="badge">Result</div>
+      <span class="result-mark">?</span>
+      <span class="item-name">What comes out?</span>
+    `;
+    return card;
+  }
+
+  if (state?.revealed) {
+    card.classList.add(state.solved ? "is-correct" : "is-wrong");
+  }
+
+  card.innerHTML = `
+    <div class="badge">Result</div>
+    <div class="number-dots" aria-hidden="true">${renderDots(value)}</div>
+    <span class="number-value">${value}</span>
+  `;
+  return card;
+}
+
+function renderNumberChoices(scene, state) {
+  const grid = document.createElement("div");
+  grid.className = "choice-grid";
+
+  scene.interaction.choices.forEach((choice) => {
+    const button = choiceButtonTemplate.content.firstElementChild.cloneNode(true);
+    button.setAttribute("aria-pressed", String(state.selected === choice));
+    button.innerHTML = `
+      <div class="number-dots" aria-hidden="true">${renderDots(choice)}</div>
+      <span class="number-value">${choice}</span>
+    `;
+
+    if (state.revealed) {
+      if (choice === scene.correctAnswer) {
+        button.classList.add("is-correct");
+      } else if (state.selected === choice) {
+        button.classList.add("is-wrong");
+      }
+    }
+
+    button.addEventListener("click", () => {
+      const isCorrect = choice === scene.correctAnswer;
+      sceneState.set(currentSceneIndex, {
+        selected: choice,
+        revealed: true,
+        solved: isCorrect,
+      });
+      renderScene();
+    });
+
+    grid.appendChild(button);
+  });
+
+  return grid;
 }
 
 function renderResultCard(result, state) {
@@ -753,7 +1081,10 @@ function renderControls(scene, state) {
   } else {
     nextButton.textContent = "Next";
     const needsAnswer =
-      scene.type === "single_function_choice" || scene.type === "chain_function_choice";
+      scene.type === "single_function_choice" ||
+      scene.type === "chain_function_choice" ||
+      scene.type === "number_choice" ||
+      scene.type === "number_chain_choice";
     nextButton.disabled = needsAnswer && !state.revealed;
     nextButton.addEventListener("click", () => {
       currentSceneIndex += 1;
@@ -773,4 +1104,33 @@ function renderProgress() {
 
 function capitalize(text) {
   return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function getSceneMode(type) {
+  if (
+    type === "single_function_choice" ||
+    type === "chain_function_choice" ||
+    type === "number_choice" ||
+    type === "number_chain_choice"
+  ) {
+    return {
+      kind: "quiz",
+      label: "Try It",
+      icon: "✏️",
+    };
+  }
+
+  if (type === "celebrate") {
+    return {
+      kind: "finish",
+      label: "Celebrate",
+      icon: "🏁",
+    };
+  }
+
+  return {
+    kind: "teach",
+    label: "Learn It",
+    icon: "👀",
+  };
 }
