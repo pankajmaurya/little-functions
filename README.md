@@ -2,6 +2,9 @@
 
 Tiny browser lesson for teaching functions to a 1st grader with an input-output machine metaphor.
 
+## Live demo
+https://pankajmaurya.github.io/little-functions/
+
 ## Open It
 
 Open [`index.html`](/Users/pankaj/codex-hacks/index.html) in a browser.
