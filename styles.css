@@ -159,6 +159,23 @@ h1 {
   animation: floaty 2.6s ease-in-out infinite;
 }
 
+.bubble-button {
+  cursor: pointer;
+  user-select: none;
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.bubble-button:hover,
+.bubble-button:focus-visible {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 10px 0 rgba(36, 50, 74, 0.08);
+  outline: none;
+}
+
+.bubble-button.is-popping {
+  animation: badge-pop 360ms ease;
+}
+
 .scene-header-art-teach {
   background: linear-gradient(180deg, #eff8ff, #d9f0ff);
 }
@@ -219,6 +236,40 @@ h1 {
   border-radius: 999px;
   background: #fff;
   font-weight: 800;
+}
+
+.bubble-burst {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.bubble-pop {
+  position: absolute;
+  left: -10px;
+  top: -10px;
+  width: 20px;
+  height: 20px;
+  border: 3px solid var(--line);
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0;
+  animation: bubble-burst-out 760ms ease-out forwards;
+  animation-delay: var(--delay, 0ms);
+}
+
+.bubble-burst-teach .bubble-pop {
+  background: #dff2ff;
+}
+
+.bubble-burst-quiz .bubble-pop {
+  background: #ffe7d8;
+}
+
+.bubble-burst-finish .bubble-pop {
+  background: #e5f8dc;
 }
 
 .stage {
@@ -836,6 +887,18 @@ h1 {
   }
 }
 
+@keyframes badge-pop {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 @keyframes beam-pulse {
   0%,
   100% {
@@ -976,6 +1039,17 @@ h1 {
   }
   50% {
     transform: scale(1.08);
+  }
+}
+
+@keyframes bubble-burst-out {
+  0% {
+    transform: translate(0, 0) scale(0.35);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) scale(1.15);
+    opacity: 0;
   }
 }
 

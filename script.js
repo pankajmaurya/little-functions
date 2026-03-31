@@ -294,7 +294,7 @@ const scenes = [
     title: "Number Chain Quiz",
     prompt: "What comes out now?",
     badge: "10",
-    support: "2 goes in. Add 1. Then add 1 again.",
+    support: "2 goes in. Add 1. Then triple.",
     visualSetup: {
       input: 2,
       machines: [
@@ -304,19 +304,77 @@ const scenes = [
           label: "One more",
         },
         {
-          icon: "+1",
-          name: "Add 1",
-          label: "One more",
+          icon: "×3",
+          name: "Triple",
+          label: "Three times",
         },
       ],
     },
     interaction: {
       kind: "number_chain_choice",
-      choices: [3, 4, 5],
+      choices: [6, 8, 9],
     },
-    correctAnswer: 4,
-    successFeedback: "Yes. 4 comes out.",
-    retryFeedback: "2 becomes 3. Then 3 becomes 4.",
+    correctAnswer: 9,
+    successFeedback: "Yes. 9 comes out.",
+    retryFeedback: "2 becomes 3. Then 3 becomes 9.",
+  },
+  {
+    type: "number_chain_choice",
+    title: "Number Chain Quiz",
+    prompt: "What comes out now?",
+    badge: "11",
+    support: "10 goes in. Take away 2. Then double.",
+    visualSetup: {
+      input: 10,
+      machines: [
+        {
+          icon: "-2",
+          name: "Take Away 2",
+          label: "Two less",
+        },
+        {
+          icon: "×2",
+          name: "Double",
+          label: "Two times",
+        },
+      ],
+    },
+    interaction: {
+      kind: "number_chain_choice",
+      choices: [14, 16, 18],
+    },
+    correctAnswer: 16,
+    successFeedback: "Yes. 16 comes out.",
+    retryFeedback: "10 becomes 8. Then 8 becomes 16.",
+  },
+  {
+    type: "number_chain_choice",
+    title: "Number Chain Quiz",
+    prompt: "What comes out now?",
+    badge: "12",
+    support: "8 goes in. Half it. Then add 3.",
+    visualSetup: {
+      input: 8,
+      machines: [
+        {
+          icon: "1/2",
+          name: "Half",
+          label: "Split in two",
+        },
+        {
+          icon: "+3",
+          name: "Add 3",
+          label: "Three more",
+        },
+      ],
+    },
+    interaction: {
+      kind: "number_chain_choice",
+      choices: [6, 7, 8],
+    },
+    correctAnswer: 7,
+    successFeedback: "Yes. 7 comes out.",
+    retryFeedback: "8 becomes 4. Then 4 becomes 7.",
   },
   {
     type: "celebrate",
@@ -340,6 +398,9 @@ const choiceButtonTemplate = document.getElementById("choiceButtonTemplate");
 
 let currentSceneIndex = 0;
 const sceneState = new Map();
+
+document.addEventListener("click", handleBubbleClick);
+document.addEventListener("keydown", handleBubbleKeydown);
 
 renderScene();
 
@@ -385,14 +446,20 @@ function renderSceneHeader(scene, sceneMode) {
   header.className = "scene-header";
   header.innerHTML = `
     <div class="scene-header-main">
-      <div class="scene-header-art scene-header-art-${sceneMode.kind}" aria-hidden="true">${sceneMode.icon}</div>
+      <div class="scene-header-art scene-header-art-${sceneMode.kind} bubble-button" data-bubble-kind="${sceneMode.kind}" role="button" tabindex="0" aria-label="${sceneMode.label}">
+        ${sceneMode.icon}
+      </div>
       <div>
-        <div class="scene-kind scene-kind-${sceneMode.kind}">${sceneMode.label}</div>
+        <div class="scene-kind scene-kind-${sceneMode.kind} bubble-button" data-bubble-kind="${sceneMode.kind}" role="button" tabindex="0" aria-label="${sceneMode.label}">
+          ${sceneMode.label}
+        </div>
         <h2 class="scene-title">${scene.title}</h2>
         <p class="scene-prompt">${scene.prompt}</p>
       </div>
     </div>
-    <div class="badge">${scene.badge}</div>
+    <div class="badge bubble-button" data-bubble-kind="${sceneMode.kind}" role="button" tabindex="0" aria-label="${scene.badge}">
+      ${scene.badge}
+    </div>
   `;
   return header;
 }
@@ -1104,6 +1171,57 @@ function renderProgress() {
 
 function capitalize(text) {
   return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function handleBubbleClick(event) {
+  const bubbleButton = event.target.closest(".bubble-button");
+  if (!bubbleButton) {
+    return;
+  }
+
+  popBubbleButton(bubbleButton);
+}
+
+function popBubbleButton(target) {
+  target.classList.remove("is-popping");
+  void target.offsetWidth;
+  target.classList.add("is-popping");
+
+  const burst = document.createElement("div");
+  burst.className = `bubble-burst bubble-burst-${target.dataset.bubbleKind || "teach"}`;
+
+  for (let index = 0; index < 8; index += 1) {
+    const bubble = document.createElement("span");
+    bubble.className = "bubble-pop";
+    bubble.style.setProperty("--dx", `${Math.cos((Math.PI * 2 * index) / 8) * 52}px`);
+    bubble.style.setProperty("--dy", `${Math.sin((Math.PI * 2 * index) / 8) * 52}px`);
+    bubble.style.setProperty("--delay", `${index * 18}ms`);
+    burst.appendChild(bubble);
+  }
+
+  const rect = target.getBoundingClientRect();
+  burst.style.left = `${rect.left + window.scrollX + rect.width / 2}px`;
+  burst.style.top = `${rect.top + window.scrollY + rect.height / 2}px`;
+  document.body.appendChild(burst);
+
+  window.setTimeout(() => {
+    target.classList.remove("is-popping");
+    burst.remove();
+  }, 900);
+}
+
+function handleBubbleKeydown(event) {
+  if (event.key !== "Enter" && event.key !== " ") {
+    return;
+  }
+
+  const bubbleButton = event.target.closest(".bubble-button");
+  if (!bubbleButton) {
+    return;
+  }
+
+  event.preventDefault();
+  popBubbleButton(bubbleButton);
 }
 
 function getSceneMode(type) {
