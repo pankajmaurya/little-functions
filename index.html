@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Function Machine Fun</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="topbar">
+        <div>
+          <p class="eyebrow">Math Play Lab</p>
+          <h1>Function Machine Fun</h1>
+        </div>
+        <div class="progress-wrap">
+          <span id="progressText">1 / 6</span>
+          <div class="progress-track" aria-hidden="true">
+            <div id="progressBar" class="progress-bar"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="lessonCard" class="lesson-card" aria-live="polite">
+        <div id="sceneBody"></div>
+      </section>
+    </main>
+
+    <template id="choiceButtonTemplate">
+      <button class="choice-card" type="button"></button>
+    </template>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
