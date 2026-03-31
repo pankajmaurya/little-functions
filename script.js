@@ -99,6 +99,16 @@ const items = {
       tint: "blue",
     },
   },
+  greenBigApple: {
+    key: "greenBigApple",
+    emoji: "🍎",
+    label: "big green apple",
+    tags: ["big", "green"],
+    visual: {
+      scale: "big",
+      tint: "green",
+    },
+  },
 };
 
 const machines = {
@@ -107,6 +117,12 @@ const machines = {
     icon: "🫐",
     name: "Make Blue",
     label: "Turns it blue",
+  },
+  makeGreen: {
+    key: "makeGreen",
+    icon: "🍏",
+    name: "Make Green",
+    label: "Turns it green",
   },
   addHat: {
     key: "addHat",
@@ -205,9 +221,9 @@ function createScenes() {
       support: "The first answer goes into the next machine.",
       visualSetup: {
         input: items.apple,
-        machines: [machines.growBig, machines.makeBlue],
+        machines: [machines.growBig, machines.makeGreen],
         middle: items.bigApple,
-        output: items.blueBigApple,
+        output: items.greenBigApple,
       },
       interaction: {
         kind: "next_only",
@@ -1025,7 +1041,11 @@ function renderItemVisual(item) {
   const tintClass = item.visual?.tint === "blue" ? "is-blue" : "";
   const isHeart = item.key === "heart" || item.key === "blueHeart";
   const isHatCat = item.key === "hatCat";
-  const isApple = item.key === "apple" || item.key === "bigApple" || item.key === "blueBigApple";
+  const isApple =
+    item.key === "apple" ||
+    item.key === "bigApple" ||
+    item.key === "blueBigApple" ||
+    item.key === "greenBigApple";
   const isCircle =
     item.key === "dotCircle" || item.key === "stripeCircle" || item.key === "blueStripeCircle";
 
@@ -1046,9 +1066,15 @@ function renderItemVisual(item) {
   }
 
   if (isApple) {
+    const appleFill =
+      item.visual?.tint === "blue"
+        ? "#2f6fff"
+        : item.visual?.tint === "green"
+          ? "#5bbf4b"
+          : "#ef4444";
     return `
       <span class="item-emoji-wrap ${scaleClass}">
-        ${renderAppleVisual(item.visual?.tint === "blue" ? "#2f6fff" : "#ef4444")}
+        ${renderAppleVisual(appleFill)}
       </span>
     `;
   }
